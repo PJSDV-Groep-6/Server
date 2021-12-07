@@ -7,15 +7,13 @@
 #include <string.h>
 #include <string>
 #include <stdexcept>
+
+#include "LinkedList.cpp"
+
 #define PORT 8080
 
-void clearBuffer(char* buffer) {
-    for (int i = 0; i <= sizeof(buffer); i++) {
-        buffer[i] = 0;
-    }
-}
-
 bool STOP(char* buffer);
+void endBuffer(char* buffer, size_t length);
 
 int main(int argc, char const* argv[])
 {
@@ -24,7 +22,10 @@ int main(int argc, char const* argv[])
     int opt = 1;
     int addrlen = sizeof(address);
     char buffer[1024] = { 0 };
-    //char* hello = "Hello from server";
+    
+    LinkedList<int> list;
+    Node<int>* node;
+    int id, message;
 
     // Creating socket file descriptor
     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0)
@@ -57,12 +58,22 @@ int main(int argc, char const* argv[])
     }
 
     while (!STOP(buffer)) {
-        clearBuffer(buffer);
         if ((new_socket = accept(server_fd, (struct sockaddr*)&address, (socklen_t*)&addrlen)) < 0){
             perror("accept");
             exit(EXIT_FAILURE);
         }
         valread = read(new_socket, buffer, 1024);
+        endBuffer(buffer, valread);
+        sscanf(buffer, "%d %d", &id, &message);
+        if (message == 0) {
+            strcpy(buffer, "");
+            while(strnlen(buffer, 1024) < 1000 && (node = list.getNode(id)) != NULL){
+                strncat(buffer, std::to_string(message).c_str(), 23);
+            }
+        }
+        else {
+            list.addNode(id, message);
+        }
         send(new_socket, buffer, 1024, 0);
         printf("%s\n", buffer);
         shutdown(new_socket, SHUT_RDWR);
@@ -70,10 +81,15 @@ int main(int argc, char const* argv[])
     return 0;
 }
 
+void endBuffer(char* buffer, size_t length) {
+    if (length >= 0) {
+        buffer[length] = '\0';
+    }
+    else {
+        buffer[0] = '\0';
+    }
+}
 
 bool STOP(char* buffer) {
-    if (buffer[0] == 'S' && buffer[1] == 'T' && buffer[2] == 'O' && buffer[3] == 'P') {
-        return true;
-    }
-    else return false;
+    return strncmp(buffer, "STOP", 4) == 0;
 }
