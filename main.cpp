@@ -14,7 +14,6 @@
 
 bool STOP(char* buffer);
 void endBuffer(char* buffer, size_t length);
-int parseBuffer(char* buffer, size_t length);
 
 int main(int argc, char const* argv[])
 {
@@ -23,8 +22,9 @@ int main(int argc, char const* argv[])
     int opt = 1;
     int addrlen = sizeof(address);
     char buffer[1024] = { 0 };
+    char numberString[24] = {0};
     
-    LinkedList<int> list;
+    LinkedList<int> messageList;
     Node<int>* node;
     int id = 0, message = 0;
 
@@ -64,27 +64,16 @@ int main(int argc, char const* argv[])
             exit(EXIT_FAILURE);
         }
         valread = read(new_socket, buffer, 1024);
-        //sscanf(buffer, "%d %d", &id, &message);
-        /*id = buffer[0];
-        data = buffer[1];*/
-        if (!(strncmp(buffer, "I", 1))) {
-            id = parseBuffer(buffer, valread);
-        }
-        else message = parseBuffer(buffer, valread);
         endBuffer(buffer, valread);
-        //if (message == 0) {
-        //    strcpy(buffer, "");
-        //    while(strnlen(buffer, 1024) < 1000 && (node = list.getNode(id)) != NULL){
-        //        strncat(buffer, std::to_string(message).c_str(), 23);
-        //    }
-        //}
-        //else {
-        //    list.addNode(id, message);
-        //}
-        if (message != 0 && id != 0) {
-            list.addNode(id, message);
-            id = 0;
-            message = 0;
+        sscanf(buffer, "%d %d", &id, &message);
+        if (id == 2 && message == 0) {
+            messageList.addNode(3, 2);
+        }
+        strcpy(buffer, "");
+        while((node = messageList.removeNode(id)) != NULL){
+            sprintf(numberString, "%d ", node->getData());
+            strcat(buffer, numberString);
+            delete node;
         }
         send(new_socket, buffer, 1024, 0);
         printf("%s\n", buffer);
@@ -100,21 +89,6 @@ void endBuffer(char* buffer, size_t length) {
     else {
         buffer[0] = '\r';
     }
-}
-
-int parseBuffer(char* buffer, size_t length) {
-    char data[10] = {0};
-    for (int i = 1; i < length;) {
-        for (int j = 0; j < length; j++) {
-            if (buffer[i] == '\0') {
-                break;
-            }
-            data[j] = buffer[i];
-            i++;
-        }
-        break;
-    }
-    return atoi(data);
 }
 
 bool STOP(char* buffer) {
