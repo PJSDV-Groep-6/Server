@@ -94,7 +94,7 @@ int main(int argc, char const* argv[])
                 if (message == "1") {
                     send(new_socket, "licht", 9, 0);
                 }
-                else if (message == "0") {
+                else if (message == "2") {
                     send(new_socket, "thcil", 9, 0);
                 }
         }
