@@ -113,9 +113,9 @@ int main(int argc, char const* argv[])
         //send(new_socket, buffer, 1024, 0);
         printf("%s\n", buffer);
         clearBuffer(buffer);
+        statefile.close();
         shutdown(new_socket, SHUT_RDWR);
     }
-    statefile.close();
     return 0;
 }
 
