@@ -115,6 +115,7 @@ int main(int argc, char const* argv[])
         clearBuffer(buffer);
         shutdown(new_socket, SHUT_RDWR);
     }
+    statefile.close();
     return 0;
 }
 
