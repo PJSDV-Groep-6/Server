@@ -15,11 +15,16 @@
 
 bool STOP(char* buffer);
 void endBuffer(char* buffer, size_t length);
+void readFile(std::string file);
 void clearBuffer(char* buffer) {
     for (int i = 0; i <= sizeof(buffer); i++) {
         buffer[i] = 0;
     }
 }
+
+const void *deur = "closed";
+bool schemerLamp = false;
+bool bedLamp = false;
 
 int main(int argc, char const* argv[])
 {
@@ -63,8 +68,8 @@ int main(int argc, char const* argv[])
         exit(EXIT_FAILURE);
     }
     bool licht = false;
-    std::fstream statefile;
     while (!STOP(buffer)) {
+        readFile("../states.cpp");
         if ((new_socket = accept(server_fd, (struct sockaddr*)&address, (socklen_t*)&addrlen)) < 0){
             perror("accept");
             exit(EXIT_FAILURE);
@@ -84,37 +89,29 @@ int main(int argc, char const* argv[])
                     licht = false;
                 }
             case 2:
-                if (message == "0" || message == "2") {
-                    send(new_socket, "1", 2, 0);
+                if (message == "check"){
+                    send(new_socket, deur, 9, 0);
                 }
-                if (message == "1" || message == "3") {
-                    send(new_socket, "0", 2, 0);
+                else if ((message == "insideClosed" || message == "outsideClosed") && deur == "open") {
+                    send(new_socket, "open", 9, 0);
                 }
+                else if ((message == "insideOpen" || message == "outsideOpen") && deur == "close") {
+                    send(new_socket, "close", 9, 0);
+                }
+                else send(new_socket, "ok", 9, 0);
             case 3:
                 if (message == "1") {
                     send(new_socket, "licht", 9, 0);
                 }
-                else if (message == "0") {
+                else if (message == "2") {
                     send(new_socket, "thcil", 9, 0);
                 }
         }
-        statefile.open("states.txt", std::ios::in);
-        if (statefile.is_open()) {
-            std::string line;
-            std::string state;
-            int value = 0;
-            while (getline(statefile, line)) {
-                std::istringstream stream(line);
-                stream >> state >> value;
-                //std::cout << state << " " << value << std::endl;
-                //if(state == "drukKnopDeur")
-            }
-        }
-        //send(new_socket, buffer, 1024, 0);
+
         printf("%s\n", buffer);
         clearBuffer(buffer);
-        statefile.close();
         shutdown(new_socket, SHUT_RDWR);
+        close(new_socket);
     }
     return 0;
 }
@@ -130,4 +127,23 @@ void endBuffer(char* buffer, size_t length) {
 
 bool STOP(char* buffer) {
     return strncmp(buffer, "STOP", 4) == 0;
+}
+
+void readFile(std::string file){
+    std::fstream statefile;
+    statefile.open(file, std::ios::in);
+    if (statefile.is_open()) {
+        std::string line;
+        std::string state;
+        int value = 0;
+        while (getline(statefile, line)) {
+            std::istringstream stream(line);
+            stream >> state >> value;
+            //std::cout << state << " " << value << std::endl;
+            if(state == "knopBinnenDeur" && value == 1){
+                deur = "open";
+            } else if (state == "knopBinnenDeur" && value == 0) deur = "close";
+        }
+        statefile.close();
+    }
 }
