@@ -10,6 +10,8 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <vector>
+#include <limits>
 
 #define PORT 8080
 
@@ -22,9 +24,45 @@ void clearBuffer(char* buffer) {
     }
 }
 
-const void *deur = "closed";
-bool schemerLamp = false;
-bool bedLamp = false;
+void modify_file_line(std::string path, int n_line, std::string newcontent) {
+
+    std::fstream file{path, std::ios::out | std::ios::in};
+    std::vector<std::string> lines{};
+    std::string lineText{};
+    // go to n_line
+    for (int i = 0; i < n_line; i++) {
+        file.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    }
+    auto begin = file.tellg(); // cursor position of the beginning of the n_line
+    file.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // skip that n_line
+
+    {
+        std::fstream temp{"./temp.txt", std::ios::out};
+        std::string templine{};
+        while (getline(file, templine)) {
+            temp << templine << "\n";
+            std::cout << templine << "\n";
+        }
+    }
+    file.clear();
+    file.seekg(begin);
+    file << newcontent;
+
+    {
+        std::fstream temp{"./temp.txt", std::ios::in};
+        std::string templine{};
+        while (getline(temp, templine)) {
+            file << templine << "\n";
+        }
+        temp.close();
+    }
+    file.close();
+}
+
+const char *deur = "closed";
+const char *schemerLamp = "thcil";
+const char *bedLamp = "thcil";
+bool licht = false;
 
 int main(int argc, char const* argv[])
 {
@@ -67,7 +105,7 @@ int main(int argc, char const* argv[])
         perror("listen");
         exit(EXIT_FAILURE);
     }
-    bool licht = false;
+
     while (!STOP(buffer)) {
         readFile("../states.cpp");
         if ((new_socket = accept(server_fd, (struct sockaddr*)&address, (socklen_t*)&addrlen)) < 0){
@@ -80,32 +118,50 @@ int main(int argc, char const* argv[])
         receive >> id >> message;
         switch (id) {
             case 1:
-                if (message == "Beweging" && !licht) {
-                    send(new_socket, "licht", 9, 0);
+                if (message == "check"){
+                    send(new_socket, schemerLamp, 9, 0);
+                }
+                else if (message == "Beweging" && !licht) {
+                    //send(new_socket, "licht", 9, 0);
+                    modify_file_line("../states.cpp", 1, "schemerLamp 1 0\n");
                     licht = true;
                 }
                 else if (message == "Beweging" && licht) {
-                    send(new_socket, "thcil", 9, 0);
+                    //send(new_socket, "thcil", 9, 0);
+                    modify_file_line("../states.cpp", 1, "schemerLamp 0 0\n");
                     licht = false;
                 }
+                else send(new_socket, "ok", 9, 0);
             case 2:
                 if (message == "check"){
                     send(new_socket, deur, 9, 0);
                 }
-                else if ((message == "insideClosed" || message == "outsideClosed") && deur == "open") {
-                    send(new_socket, "open", 9, 0);
+                else if ((message == "insideClosed" || message == "outsideClosed") && deur == "closed") {
+                    //send(new_socket, "open", 9, 0);
+                    modify_file_line("../states.cpp", 2, "deur 1 0\n");
                 }
-                else if ((message == "insideOpen" || message == "outsideOpen") && deur == "close") {
-                    send(new_socket, "close", 9, 0);
+                else if ((message == "insideOpen" || message == "outsideOpen") && deur == "open") {
+                    //send(new_socket, "closed", 9, 0);
+                    modify_file_line("../states.cpp", 2, "deur 0 0\n");
                 }
                 else send(new_socket, "ok", 9, 0);
             case 3:
-                if (message == "1") {
-                    send(new_socket, "licht", 9, 0);
+                if (message == "check"){
+                    send(new_socket, bedLamp, 9, 0);
+                }
+                else if (message == "1") {
+                    //send(new_socket, "licht", 9, 0);
+                    send(new_socket, "ok", 9, 0);
+                    modify_file_line("../states.cpp", 0, "bedLamp 1 0\n");
+                    modify_file_line("../states.cpp", 1, "schemerLamp 1 0\n");
                 }
                 else if (message == "2") {
-                    send(new_socket, "thcil", 9, 0);
+                    //send(new_socket, "thcil", 9, 0);
+                    send(new_socket, "ok", 9, 0);
+                    modify_file_line("../states.cpp", 0, "bedLamp 0 0\n");
+                    modify_file_line("../states.cpp", 1, "schemerLamp 0 0\n");
                 }
+                else send(new_socket, "ok", 9, 0);
         }
 
         printf("%s\n", buffer);
@@ -135,14 +191,34 @@ void readFile(std::string file){
     if (statefile.is_open()) {
         std::string line;
         std::string state;
+        std::string lock;
+        bool brand;
         int value = 0;
         while (getline(statefile, line)) {
             std::istringstream stream(line);
-            stream >> state >> value;
+            stream >> state >> value >> lock;
             //std::cout << state << " " << value << std::endl;
-            if(state == "knopBinnenDeur" && value == 1){
+            if(lock == "0" && !brand) {
+                if (state == "deur" && value == 1) {
+                    deur = "open";
+                } else if (state == "deur" && value == 0) deur = "closed";
+                if (state == "schemerLamp" && value == 1) {
+                    schemerLamp = "licht";
+                } else if (state == "schemerLamp" && value == 0) schemerLamp = "thcil";
+                if (state == "bedLamp" && value == 1) {
+                    bedLamp = "licht";
+                } else if (state == "bedLamp" && value == 0) bedLamp = "thcil";
+            }
+            if (state == "brand" && value == 1) {
                 deur = "open";
-            } else if (state == "knopBinnenDeur" && value == 0) deur = "close";
+                schemerLamp = "licht";
+                modify_file_line("../states.cpp", 1, "schemerLamp 1 1\n");
+                modify_file_line("../states.cpp", 2, "deur 1 1\n");
+                brand = true;
+            }
+            else if (state == "brand" && value == 0){
+                brand = false;
+            }
         }
         statefile.close();
     }
