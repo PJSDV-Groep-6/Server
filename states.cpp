@@ -1,5 +1,4 @@
-drukSensorBed 1
-knopBed 2
-bewegingLamp 3
-belDeur 4
-knopBinnenDeur 0
+bedLamp 0 0
+schemerLamp 0 0
+deur 0 0
+brand 0 1
