@@ -18,6 +18,7 @@
 bool STOP(char* buffer);
 void endBuffer(char* buffer, size_t length);
 void readFile(std::string file);
+bool toggleLed();
 void clearBuffer(char* buffer) {
     for (int i = 0; i <= sizeof(buffer); i++) {
         buffer[i] = 0;
@@ -37,8 +38,14 @@ void modify_file_line(std::string path, int line, std::string newline){
 
     std::string temp = lines[line-1];
     std::istringstream stream(temp);
-    stream >> state >> value >> lock;
-    if (lock == "0") {
+    std::istringstream lockparse(newline);
+    lockparse >> state >> value >> lock;
+    if (lock == "1") {
+        stream >> state >> value;
+        lines[line-1] = newline + "\n";
+    }
+    else {
+        stream >> state >> value >> lock;
         lines[line-1] = newline + " " + lock + "\n";
     }
 
@@ -53,6 +60,7 @@ const char *deur = "closed";
 const char *schemerLamp = "thcil";
 const char *bedLamp = "thcil";
 bool licht = false;
+bool bedSwitch = false;
 
 int main(int argc, char const* argv[])
 {
@@ -141,17 +149,16 @@ int main(int argc, char const* argv[])
                 if (message == "check"){
                     send(new_socket, bedLamp, 9, 0);
                 }
-                else if (message == "1") {
+                else if (message == "switch") {
                     //send(new_socket, "licht", 9, 0);
+                    schemerLamp = "thcil";
                     send(new_socket, "ok", 9, 0);
-                    modify_file_line("../states.cpp", 1, "bedLamp 1");
-                    modify_file_line("../states.cpp", 2, "schemerLamp 1");
+                    toggleLed();
                 }
-                else if (message == "2") {
-                    //send(new_socket, "thcil", 9, 0);
+                else if (message == "opgestaan") {
                     send(new_socket, "ok", 9, 0);
-                    modify_file_line("../states.cpp", 1, "bedLamp 0");
-                    modify_file_line("../states.cpp", 2, "schemerLamp 0");
+                    schemerLamp = "licht";
+                    modify_file_line("../states.cpp", 2, "schemerLamp 1 1");
                 }
                 else send(new_socket, "ok", 9, 0);
         }
@@ -214,5 +221,18 @@ void readFile(std::string file){
             }
         }
         statefile.close();
+    }
+}
+
+bool toggleLed(){
+    if (bedSwitch){
+        modify_file_line("../states.cpp", 1, "bedLamp 0");
+        modify_file_line("../states.cpp", 2, "schemerLamp 0 0");
+        bedSwitch = false;
+    }
+    else{
+        modify_file_line("../states.cpp", 1, "bedLamp 1");
+        modify_file_line("../states.cpp", 2, "schemerLamp 0 0");
+        bedSwitch = true;
     }
 }
