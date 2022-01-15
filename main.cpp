@@ -3,7 +3,7 @@
 #include <cstring>
 #include <iostream>
 #include "headers/socketService.h"
-#include "headers/file_handle.h"
+#include "headers/fileHandle.h"
 #include "headers/bed.h"
 #include "headers/schemerlamp.h"
 
@@ -12,9 +12,9 @@ void endBuffer(char* buffer, size_t length);
 void readFile(std::string file);
 void clearBuffer(char* buffer);
 
-const char *deur = "close";
-const char *schemerLamp = "thcil";
-const char *bedLamp = "thcil";
+char deur[] = "close";
+char schemerLamp[] = "thcil";
+char bedLamp[] = "thcil";
 bool licht = false;
 
 file_handle statefile("../states.txt");
@@ -22,13 +22,15 @@ file_handle statefile("../states.txt");
 int main(int argc, char const* argv[]) {
     bed bed1(3, "bedLamp", "../states.txt");
     schemerlamp lamp1(1, "schemerLamp", "../states.txt");
+    const size_t bufferSize = 1024;
     char buffer[1024] = {0};
     int valread;
     int id = 0;
     std::string message;
     socketService server(8080);
     while (!STOP(buffer)) {
-        readFile("../states.txt");
+        FileHandle stateFile("../states.txt");
+        stateFile.readFile(deur, schemerLamp, bedLamp);
         server.sockAccept();
         valread = server.sockRead(buffer);
         endBuffer(buffer, valread);
@@ -81,7 +83,7 @@ int main(int argc, char const* argv[]) {
                 break;
             }
                 //printf("%s\n", buffer);
-                clearBuffer(buffer);
+                clearBuffer(buffer, bufferSize);
                 server.sockClose();
         }
         return 0;
@@ -100,48 +102,8 @@ bool STOP(char* buffer) {
     return strncmp(buffer, "STOP", 4) == 0;
 }
 
-void readFile(std::string file){
-    std::fstream statefile;
-    statefile.open(file, std::ios::in);
-    if (statefile.is_open()) {
-        std::string line;
-        std::string state;
-        std::string lock;
-        bool brand;
-        int value = 0;
-        while (getline(statefile, line)) {
-            std::istringstream stream(line);
-            stream >> state >> value >> lock;
-            //std::cout << state << " " << value << std::endl;
-            if(lock == "0" && !brand) {
-                if (state == "deur" && value == 1) {
-                    deur = "open";
-                } else if (state == "deur" && value == 0) deur = "close";
-                if (state == "schemerLamp" && value == 1) {
-                    schemerLamp = "licht";
-                } else if (state == "schemerLamp" && value == 0) schemerLamp = "thcil";
-                if (state == "bedLamp" && value == 1) {
-                    bedLamp = "licht";
-                } else if (state == "bedLamp" && value == 0) bedLamp = "thcil";
-            }
-            if (state == "brand" && value == 1) {
-                deur = "open";
-                schemerLamp = "licht";
-//                statefile.modifyFileLine("schemerlamp", "schemerLamp 1 1");
-//                statefile.modifyFileLine("deur", "deur 1 1");
-//                statefile.modifyFileLine("bedLamp", "bedLamp 1 1");
-                brand = true;
-            }
-            else if (state == "brand" && value == 0){
-                brand = false;
-            }
-        }
-        statefile.close();
-    }
-}
-
-void clearBuffer(char* buffer) {
-    for (int i = 0; i <= sizeof(buffer); i++) {
+void clearBuffer(char* buffer, const size_t length) {
+    for (int i = 0; i <= length; i++) {
         buffer[i] = 0;
     }
 }
