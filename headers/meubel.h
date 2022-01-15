@@ -8,7 +8,9 @@ using namespace std;
 
 class meubel {
 public:
-    //meubel(int, string, string);
+    meubel(int, string, string);
+    bool zetLed(bool);
+    bool toggleLed();
 private:
 protected:
     int id;

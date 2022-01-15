@@ -2,10 +2,10 @@
 
 #include <utility>
 
-schemerlamp::schemerlamp(int id, string name, const string& path): statefile(path), log("log.txt"), lamp(false) {
-    this->id = id;
-    this->name = std::move(name);
-    this->path = path;
+schemerlamp::schemerlamp(int id, string name, const string& path): meubel(id, name, path) , statefile(path), log("log.txt"), lamp(false) {
+    // this->id = id;
+    // this->name = std::move(name);
+    // this->path = path;
 }
 
 bool schemerlamp::zetLed(bool state) {

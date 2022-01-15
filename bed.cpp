@@ -2,10 +2,10 @@
 
 #include <utility>
 
-bed::bed(int id, string name, const string& path): statefile(path), log("log.txt"), bedSwitch(false) {
-    this->id = id;
-    this->name = std::move(name);
-    this->path = path;
+bed::bed(int given_id, string given_name, const string& given_path):  meubel(given_id, given_name, given_path), statefile(given_path), id(given_id), name (given_name), path(given_path), log("log.txt"), bedSwitch(false) {
+    // this->id = id;
+    // this->name = std::move(name);
+    // this->path = path;
 }
 
 bool bed::zetLed(bool state){

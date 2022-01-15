@@ -16,7 +16,10 @@ private:
     file_handle statefile;
     file_handle log;
     bool bedSwitch;
+    
+    int id;
+    string path;
+    string name;
+
 };
-
-
 #endif //SERVER_BED_H

@@ -15,6 +15,10 @@ private:
     bool lamp;
     file_handle statefile;
     file_handle log;
+
+    int id;
+    string path;
+    string name;
 };
 
 
