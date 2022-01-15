@@ -12,10 +12,13 @@ public:
     bool zetLed(bool);
     bool toggleLed();
 private:
-protected:
-    int id;
+    bool led;
+    file_handle statefile;
+    file_handle log;
     string path;
     string name;
+protected:
+    int id;
 };
 
 

@@ -6,11 +6,9 @@
 
 using namespace std;
 
-class bed : meubel{
+class bed : public meubel{
 public:
     bed(int, string, const string&);
-    bool zetLed(bool);
-    bool toggleLed();
     void parseFile();
 private:
     file_handle statefile;

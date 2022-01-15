@@ -4,7 +4,7 @@ meubel::meubel(int gegeven_id, string gegeven_name, string gegeven_path): name(g
 
 }
 
-bool bed::zetLed(bool state){
+bool meubel::zetLed(bool state){
     if (state){
         statefile.modify_file_line(name, name + " 1");
         log.append_line(name + " is aan");
@@ -17,14 +17,15 @@ bool bed::zetLed(bool state){
     }
 }
 
-bool bed::toggleLed(){
-    if (bedSwitch){
+bool meubel::toggleLed(){
+    if (led){
         zetLed(false);
-        bedSwitch = false;
+        led = false;
         return true;
     }
     else{
         zetLed(true);
-        bedSwitch = true;
+        led = true;
         return false;
     }
+}

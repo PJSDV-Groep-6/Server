@@ -6,11 +6,9 @@
 
 using namespace std;
 
-class schemerlamp : meubel{
+class schemerlamp : public meubel{
 public:
     schemerlamp(int, string, const string&);
-    bool zetLed(bool);
-    bool toggleLed();
 private:
     bool lamp;
     file_handle statefile;
