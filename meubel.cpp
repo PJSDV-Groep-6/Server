@@ -6,12 +6,12 @@ meubel::meubel(int gegeven_id, string gegeven_name, string gegeven_path): name(g
 
 bool meubel::zetLed(bool state){
     if (state){
-        statefile.modify_file_line(name, name + " 1");
+        statefile.modifyFileLine(name, name + " 1");
         log.append_line(name + " is aan");
         return true;
     }
     else {
-        statefile.modify_file_line(name, name + " 0");
+        statefile.modifyFileLine(name, name + " 0");
         log.append_line(name + " is uit");
         return false;
     }
