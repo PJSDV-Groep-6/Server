@@ -2,7 +2,7 @@
 #define SERVER_SCHEMERLAMP_H
 
 #include "meubel.h"
-#include "file_handle.h"
+#include "fileHandle.h"
 
 using namespace std;
 
@@ -11,8 +11,8 @@ public:
     schemerlamp(int, string, const string&);
 private:
     bool lamp;
-    file_handle statefile;
-    file_handle log;
+    FileHandle statefile;
+    FileHandle log;
 
     int id;
     string path;

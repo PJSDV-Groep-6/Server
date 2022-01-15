@@ -1,7 +1,7 @@
 #ifndef SERVER_BED_H
 #define SERVER_BED_H
 
-#include "file_handle.h"
+#include "fileHandle.h"
 #include "meubel.h"
 
 using namespace std;
@@ -11,8 +11,8 @@ public:
     bed(int, string, const string&);
     void parseFile();
 private:
-    file_handle statefile;
-    file_handle log;
+    FileHandle statefile;
+    FileHandle log;
     bool bedSwitch;
     
     int id;
