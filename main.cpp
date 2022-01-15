@@ -5,35 +5,30 @@
 #include "headers/socketService.h"
 #include "headers/file_handle.h"
 #include "headers/bed.h"
+#include "headers/schemerlamp.h"
 
 bool STOP(char* buffer);
 void endBuffer(char* buffer, size_t length);
 void readFile(std::string file);
-bool toggleLed();
-void clearBuffer(char* buffer) {
-    for (int i = 0; i <= sizeof(buffer); i++) {
-        buffer[i] = 0;
-    }
-}
+void clearBuffer(char* buffer);
 
 const char *deur = "close";
 const char *schemerLamp = "thcil";
 const char *bedLamp = "thcil";
 bool licht = false;
-bool bedSwitch = false;
 
-file_handle statefile("../states.cpp");
-bed bed1(3, "bedLamp", "../states.cpp");
-file_handle logboek("log.txt");
+file_handle statefile("../states.txt");
 
 int main(int argc, char const* argv[]) {
+    bed bed1(3, "bedLamp", "../states.txt");
+    schemerlamp lamp1(1, "schemerLamp", "../states.txt");
     char buffer[1024] = {0};
     int valread;
     int id = 0;
     std::string message;
     socketService server(8080);
     while (!STOP(buffer)) {
-        readFile("../states.cpp");
+        readFile("../states.txt");
         server.sockAccept();
         valread = server.sockRead(buffer);
         endBuffer(buffer, valread);
@@ -73,12 +68,16 @@ int main(int argc, char const* argv[]) {
                     //send(new_socket, "licht", 9, 0);
                     schemerLamp = "thcil";
                     server.sockSend("ok");
-                    toggleLed();
+                    bed1.toggleLed();
+                    lamp1.toggleLed();
                 } else if (message == "opgestaan") {
                     server.sockSend("ok");
                     schemerLamp = "licht";
                     statefile.modify_file_line("schemerLamp", "schemerLamp 1 1");
                 } else server.sockSend("ok");
+                break;
+            default:
+                server.sockSend("Unkown ID");
                 break;
             }
                 //printf("%s\n", buffer);
@@ -141,19 +140,8 @@ void readFile(std::string file){
     }
 }
 
-bool toggleLed(){
-    if (bedSwitch){
-        //bed1.zetLed(false);
-        statefile.modify_file_line("bedLamp", "bedLamp 0 0");
-        statefile.modify_file_line("schemerLamp", "schemerLamp 0 0");
-        logboek.append_line("Bedlamp is uit");
-        bedSwitch = false;
-    }
-    else{
-        //bed1.zetLed(true);
-        statefile.modify_file_line("bedLamp", "bedLamp 1 0");
-        statefile.modify_file_line("schemerLamp", "schemerLamp 0 0");
-        logboek.append_line("Bedlamp is aan");
-        bedSwitch = true;
+void clearBuffer(char* buffer) {
+    for (int i = 0; i <= sizeof(buffer); i++) {
+        buffer[i] = 0;
     }
 }

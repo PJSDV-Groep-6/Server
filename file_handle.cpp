@@ -65,3 +65,18 @@ int file_handle::append_line(string line) {
     file.close();
     return 0;
 }
+
+void file_handle::parseFile(string state) {
+    if(file.is_open()){
+        string line;
+        string state;
+        string lock;
+        int value = 0;
+        while (getline(file, line)){}
+        istringstream stream(line);
+        stream >> state >> value >> lock;
+        if (lock == "0"){
+            
+        }
+    }
+}

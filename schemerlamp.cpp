@@ -1,15 +1,15 @@
-#include "headers/bed.h"
+#include "headers/schemerlamp.h"
 
 #include <utility>
 
-bed::bed(int id, string name, const string& path): statefile(path), log("log.txt"), bedSwitch(false) {
+schemerlamp::schemerlamp(int id, string name, const string& path): statefile(path), log("log.txt"), lamp(false) {
     this->id = id;
     this->name = std::move(name);
     this->path = path;
 }
 
-bool bed::zetLed(bool state){
-    if (state){
+bool schemerlamp::zetLed(bool state) {
+    if (state) {
         statefile.modify_file_line(name, name + " 1");
         log.append_line(name + " is aan");
         return true;
@@ -21,15 +21,15 @@ bool bed::zetLed(bool state){
     }
 }
 
-bool bed::toggleLed(){
-    if (bedSwitch){
+bool schemerlamp::toggleLed(){
+    if (lamp){
         zetLed(false);
-        bedSwitch = false;
+        lamp = false;
         return true;
     }
     else{
         zetLed(true);
-        bedSwitch = true;
+        lamp = true;
         return false;
     }
 }

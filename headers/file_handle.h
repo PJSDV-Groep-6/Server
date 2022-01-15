@@ -14,6 +14,7 @@ public:
     explicit file_handle(string);
     int modify_file_line(string, string);
     int append_line(string);
+    void parseFile(string);
 private:
     int gotoLine(string);
     string path;
