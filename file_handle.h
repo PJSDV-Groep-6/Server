@@ -11,8 +11,9 @@ using namespace std;
 
 class file_handle {
 public:
-    file_handle(string);
-    void modify_file_line(string, string);
+    explicit file_handle(string);
+    int modify_file_line(string, string);
+    int append_line(string);
 private:
     int gotoLine(string);
     string path;

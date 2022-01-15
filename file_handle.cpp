@@ -1,14 +1,13 @@
 #include "file_handle.h"
 
 file_handle::file_handle(string path): path(path) {
-    fstream file;
-    file.open(this->path, ios::in | ios::out);
+    fstream file(this->path, ios::in | ios::out);
 }
 
-void file_handle::modify_file_line(string query, string newline){
+int file_handle::modify_file_line(string query, string newline){
     int line = gotoLine(query);
-    fstream file;
-    file.open(this->path, ios::in | ios::out);
+    fstream file(this->path, ios::in | ios::out);
+    if (!file.is_open()) return -1;
     vector<string> lines{};
     string lineText{};
     int value = 0;
@@ -36,13 +35,14 @@ void file_handle::modify_file_line(string query, string newline){
     for (auto& x: lines){
         file << x;
     }
+    return 0;
 }
 
 int file_handle::gotoLine(string query) {
     string lineText{};
     std::string state;
-    fstream file;
-    file.open(this->path, ios::in | ios::out);
+    fstream file(this->path, ios::in | ios::out);
+    if (!file.is_open()) return -1;
     vector<string> lines{};
     while (getline(file, lineText)) {
         lines.push_back(lineText + "\n");
@@ -56,4 +56,12 @@ int file_handle::gotoLine(string query) {
         }
     }
     return -1;
+}
+
+int file_handle::append_line(string line) {
+    fstream file(this->path, ios::in | ios::out | ios::app);
+    if (!file.is_open()) return -1;
+    file << line << "\n---------------------\n";
+    file.close();
+    return 0;
 }
