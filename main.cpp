@@ -40,12 +40,12 @@ int main(int argc, char const* argv[]) {
                     server.sockSend(schemerLamp);
                 } else if (message == "Beweging" && !licht) {
                     //send(new_socket, "licht", 9, 0);
-                    statefile.modify_file_line("schemerLamp", "schemerLamp 1");
+                    statefile.modifyFileLine("schemerLamp", "schemerLamp 1");
                     licht = true;
                     server.sockSend("ok");
                 } else if (message == "Beweging" && licht) {
                     //send(new_socket, "thcil", 9, 0);
-                    statefile.modify_file_line("schemerLamp", "schemerLamp 0");
+                    statefile.modifyFileLine("schemerLamp", "schemerLamp 0");
                     licht = false;
                     server.sockSend("ok");
                 } else server.sockSend("ok");
@@ -55,10 +55,10 @@ int main(int argc, char const* argv[]) {
                     server.sockSend(deur);
                 } else if ((message == "insideClosed" || message == "outsideClosed") && deur == "close") {
                     //send(new_socket, "open", 9, 0);
-                    statefile.modify_file_line("deur", "deur 1");
+                    statefile.modifyFileLine("deur", "deur 1");
                 } else if ((message == "insideOpen" || message == "outsideOpen") && deur == "open") {
                     //send(new_socket, "closed", 9, 0);
-                    statefile.modify_file_line("deur", "deur 0");
+                    statefile.modifyFileLine("deur", "deur 0");
                 } else server.sockSend("ok");
                 break;
             case 3:
@@ -73,7 +73,7 @@ int main(int argc, char const* argv[]) {
                 } else if (message == "opgestaan") {
                     server.sockSend("ok");
                     schemerLamp = "licht";
-                    statefile.modify_file_line("schemerLamp", "schemerLamp 1 1");
+                    statefile.modifyFileLine("schemerLamp", "schemerLamp 1 1");
                 } else server.sockSend("ok");
                 break;
             default:
@@ -127,9 +127,9 @@ void readFile(std::string file){
             if (state == "brand" && value == 1) {
                 deur = "open";
                 schemerLamp = "licht";
-//                statefile.modify_file_line("schemerlamp", "schemerLamp 1 1");
-//                statefile.modify_file_line("deur", "deur 1 1");
-//                statefile.modify_file_line("bedLamp", "bedLamp 1 1");
+//                statefile.modifyFileLine("schemerlamp", "schemerLamp 1 1");
+//                statefile.modifyFileLine("deur", "deur 1 1");
+//                statefile.modifyFileLine("bedLamp", "bedLamp 1 1");
                 brand = true;
             }
             else if (state == "brand" && value == 0){

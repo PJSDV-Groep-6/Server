@@ -10,13 +10,13 @@ schemerlamp::schemerlamp(int id, string name, const string& path): statefile(pat
 
 bool schemerlamp::zetLed(bool state) {
     if (state) {
-        statefile.modify_file_line(name, name + " 1");
-        log.append_line(name + " is aan");
+        statefile.modifyFileLine(name, name + " 1");
+        log.appendLine(name + " is aan");
         return true;
     }
     else {
-        statefile.modify_file_line(name, name + " 0");
-        log.append_line(name + " is uit");
+        statefile.modifyFileLine(name, name + " 0");
+        log.appendLine(name + " is uit");
         return false;
     }
 }

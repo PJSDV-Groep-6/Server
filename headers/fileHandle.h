@@ -9,11 +9,11 @@
 
 using namespace std;
 
-class file_handle {
+class FileHandle {
 public:
-    explicit file_handle(string);
-    int modify_file_line(string, string);
-    int append_line(string);
+    explicit FileHandle(string);
+    int modifyFileLine(string, string);
+    int appendLine(string);
     void parseFile(string);
 private:
     int gotoLine(string);
