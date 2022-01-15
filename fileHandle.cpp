@@ -1,4 +1,5 @@
-#include "headers/FileHandle.h"
+#include "headers/fileHandle.h"
+#include <string.h>
 
 FileHandle::FileHandle(string path): path(path) {
 }
@@ -111,11 +112,8 @@ void FileHandle::readFile(char *deur, char *schemerLamp, char *bedLamp){
                 }
             }
             if (state == "brand" && value == 1) {
-                deur = "open";
-                schemerLamp = "licht";
-//                statefile.modifyFileLine("schemerlamp", "schemerLamp 1 1");
-//                statefile.modifyFileLine("deur", "deur 1 1");
-//                statefile.modifyFileLine("bedLamp", "bedLamp 1 1");
+                strcpy(deur, "open");
+                strcpy(schemerLamp, "licht");
                 brand = true;
             }
             else if (state == "brand" && value == 0){
