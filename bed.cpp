@@ -1,4 +1,4 @@
-#include "bed.h"
+#include "headers/bed.h"
 
 bed::bed(int id, string name, string path): id(id), name(name), path(path), statefile(path) {
 //    this->id = id;

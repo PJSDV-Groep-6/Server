@@ -2,9 +2,9 @@
 #include <string>
 #include <cstring>
 #include <iostream>
-#include "socketService.h"
-#include "file_handle.h"
-#include "bed.h"
+#include "headers/socketService.h"
+#include "headers/file_handle.h"
+#include "headers/bed.h"
 
 bool STOP(char* buffer);
 void endBuffer(char* buffer, size_t length);
