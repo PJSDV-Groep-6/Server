@@ -8,12 +8,12 @@ using namespace std;
 
 class meubel {
 public:
-    string path;
-    string name;
     //meubel(int, string, string);
 private:
 protected:
     int id;
+    string path;
+    string name;
 };
 
 

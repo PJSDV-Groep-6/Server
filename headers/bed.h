@@ -2,17 +2,20 @@
 #define SERVER_BED_H
 
 #include "file_handle.h"
+#include "meubel.h"
 
 using namespace std;
 
-class bed {
+class bed : meubel{
 public:
-    bed(int, string, string);
+    bed(int, string, const string&);
     bool zetLed(bool);
+    bool toggleLed();
+    void parseFile();
 private:
-    string name, path;
-    int id;
     file_handle statefile;
+    file_handle log;
+    bool bedSwitch;
 };
 
 
