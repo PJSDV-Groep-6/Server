@@ -6,15 +6,17 @@
 
 using namespace std;
 
-class schemerlamp : meubel{
+class schemerlamp : public meubel{
 public:
     schemerlamp(int, string, const string&);
-    bool zetLed(bool);
-    bool toggleLed();
 private:
     bool lamp;
     FileHandle statefile;
     FileHandle log;
+
+    int id;
+    string path;
+    string name;
 };
 
 
