@@ -6,34 +6,13 @@ schemerlamp::schemerlamp(int id, string name, const string& path): meubel(id, na
     
 }
 
-string schemerlamp::check() {
-    std::fstream file(path, std::ios::in);
-    if (file.is_open()) {
-        std::string line;
-        std::string state;
-        std::string lock;
-        int value = 0;
-        while (getline(file, line)) {
-            std::istringstream stream(line);
-            stream >> state >> value >> lock;
-            if (lock == "0" && state == name && value == 1) {
-                this->state = "licht";
-                file.close();
-                return "licht";
-            }
-            else if(lock == "0" && state == name && value == 0){
-                this->state = "thcil";
-                file.close();
-                return "thcil";
-            }
+void schemerlamp::input(int id, string message){
+    if (id == this->id){
+        if (message == "Beweging" && !mem){
+            zetState(true);
+        }
+        else if (message == "Beweging" && mem) {
+            zetState(false);
         }
     }
-    file.close();
-}
-
-void schemerlamp::aan(bool state) {
-    if (state){
-        statefile.modifyFileLine(name, name + "1");
-    }
-    else statefile.modifyFileLine(name, name + "0");
 }

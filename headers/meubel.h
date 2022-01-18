@@ -9,15 +9,17 @@ using namespace std;
 class meubel {
 public:
     meubel(int, string, string);
-    bool zetLed(bool);
-    bool toggleLed();
+    bool zetState(bool);
+    bool toggleState();
     const char *state;
-    virtual string check() = 0;
+    string check();
+    bool checkBrand();
 private:
-    bool led;
     FileHandle statefile;
     FileHandle log;
 protected:
+    bool brand;
+    bool mem;
     string path;
     string name;
     int id;

@@ -41,19 +41,17 @@ int FileHandle::modifyFileLine(string query, string newline){
 int FileHandle::gotoLine(string query) {
     string lineText{};
     std::string state;
+    int i = 0;
     fstream file(this->path, ios::in | ios::out);
     if (!file.is_open()) return -1;
     vector<string> lines{};
     while (getline(file, lineText)) {
-        lines.push_back(lineText + "\n");
-    }
-    for (int i; i < lines.size(); i++){
-        string temp = lines[i];
-        istringstream stream(temp);
+        istringstream stream(lineText);
         stream >> state;
         if (state == query){
             return i+1;
         }
+        i++;
     }
     return -1;
 }
