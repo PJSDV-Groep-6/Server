@@ -1,12 +1,10 @@
-#include "headers/bed.h"
+#include "headers/deur.h"
 
-#include <utility>
-
-bed::bed(int given_id, string given_name, const string& given_path):  meubel(given_id, given_name, given_path), statefile(given_path), log("log.txt"), bedSwitch(false) {
+deur::deur(int given_id, string given_name, const string& given_path):  meubel(given_id, given_name, given_path), statefile(given_path), log("log.txt") {
 
 }
 
-string bed::check() {
+string deur::check() {
     std::fstream file(path, std::ios::in);
     if (file.is_open()) {
         std::string line;
@@ -17,21 +15,21 @@ string bed::check() {
             std::istringstream stream(line);
             stream >> state >> value >> lock;
             if (lock == "0" && state == name && value == 1) {
-                this->state = "licht";
+                this->state = "open";
                 file.close();
-                return "licht";
+                return "open";
             }
             else if(lock == "0" && state == name && value == 0){
-                this->state = "thcil";
+                this->state = "close";
                 file.close();
-                return "thcil";
+                return "close";
             }
         }
     }
     file.close();
 }
 
-void bed::aan(bool state) {
+void deur::open(bool state) {
     if (state){
         statefile.modifyFileLine(name, name + "1");
     }

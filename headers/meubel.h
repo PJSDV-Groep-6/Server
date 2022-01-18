@@ -11,13 +11,15 @@ public:
     meubel(int, string, string);
     bool zetLed(bool);
     bool toggleLed();
+    const char *state;
+    virtual string check() = 0;
 private:
     bool led;
-    file_handle statefile;
-    file_handle log;
+    FileHandle statefile;
+    FileHandle log;
+protected:
     string path;
     string name;
-protected:
     int id;
 };
 

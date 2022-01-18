@@ -9,14 +9,12 @@ using namespace std;
 class schemerlamp : public meubel{
 public:
     schemerlamp(int, string, const string&);
+    string check();
+    void aan(bool);
 private:
     bool lamp;
     FileHandle statefile;
     FileHandle log;
-
-    int id;
-    string path;
-    string name;
 };
 
 
