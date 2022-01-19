@@ -4,7 +4,18 @@ meubel::meubel(int gegeven_id, string gegeven_name, string gegeven_path): name(g
 
 }
 
-
+bool meubel::zetLed(bool state){
+    if (state){
+        statefile.modifyFileLine(name, name + " 1");
+        log.append_line(name + " is aan");
+        return true;
+    }
+    else {
+        statefile.modifyFileLine(name, name + " 0");
+        log.append_line(name + " is uit");
+        return false;
+    }
+}
 
 bool meubel::toggleLed(){
     if (led){
