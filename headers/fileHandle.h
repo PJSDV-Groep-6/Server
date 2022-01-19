@@ -14,10 +14,8 @@ public:
     explicit FileHandle(string);
     int modifyFileLine(string, string);
     int appendLine(string);
-    void parseFile(string);
-    void readFile(char *deur, char *schemerLamp, char *bedLamp);
-private:
     int gotoLine(string);
+private:
     string path;
 };
 
