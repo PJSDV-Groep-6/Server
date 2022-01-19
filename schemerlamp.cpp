@@ -14,7 +14,7 @@ bool schemerlamp::input(int id, string message){
         }
         else if (message == "Beweging" && mem) {
             zetState(false);
-            return false;
         }
-    } else return false;
+    }
+    return false;
 }
