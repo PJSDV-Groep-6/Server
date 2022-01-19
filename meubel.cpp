@@ -1,7 +1,7 @@
 #include "headers/meubel.h"
 #include <iostream>
 
-meubel::meubel(int gegeven_id, string gegeven_name, string gegeven_path): name(gegeven_name), path(gegeven_path), id(gegeven_id), statefile(gegeven_path), log("log.txt") {
+meubel::meubel(int gegeven_id, string gegeven_name, string gegeven_path, string internal): name(gegeven_name), path(gegeven_path), id(gegeven_id), statefile(gegeven_path), log("log.txt"), istatefile(internal) {
     if(statefile.gotoLine("brand") == -1) {
         statefile.appendLine("brand 0 1");
     }

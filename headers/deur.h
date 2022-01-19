@@ -9,11 +9,12 @@ using namespace std;
 
 class deur : public meubel{
 public:
-    deur(int, string, const string&);
+    deur(int, string, const string&, string internal);
     bool input(int,string) override;
 private:
     FileHandle statefile;
     FileHandle log;
+    FileHandle istates;
 };
 
 

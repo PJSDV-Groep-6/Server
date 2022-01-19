@@ -8,11 +8,12 @@ using namespace std;
 
 class bed : public meubel{
 public:
-    bed(int, string, const string&);
+    bed(int, string, const string&, string);
     bool input(int, string) override;
 private:
     FileHandle statefile;
     FileHandle log;
+    FileHandle istates;
     bool bedSwitch;
 
 };

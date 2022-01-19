@@ -6,7 +6,7 @@
 #include "headers/bed.h"
 #include "headers/schemerlamp.h"
 #include "headers/deur.h"
-
+#include "headers/muur.h"
 bool STOP(char* buffer);
 
 int main(int argc, char const* argv[]) {
@@ -14,6 +14,7 @@ int main(int argc, char const* argv[]) {
     meubels.push_back(new schemerlamp(1, "schemerLamp", "../states.cpp"));
     meubels.push_back(new deur(2, "deur", "../states.cpp"));
     meubels.push_back(new bed(3, "bedLamp", "../states.cpp"));
+    meubels.push_back(new muur(4, "muur", "../states.cpp"));
     int id = 0;
     char buffer[1024] = {0};
     std::string message;

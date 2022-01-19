@@ -8,8 +8,8 @@ using namespace std;
 
 class meubel {
 public:
-    meubel(int, string, string);
-    bool zetState(bool);
+    meubel(int, string, string, string);
+    virtual bool zetState(bool);
     bool toggleState();
     const char *state;
     string check();
@@ -19,6 +19,7 @@ public:
 private:
     FileHandle statefile;
     FileHandle log;
+    FileHandle istatefile;
 protected:
     bool brand;
     bool mem;
