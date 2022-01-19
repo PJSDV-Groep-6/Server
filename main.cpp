@@ -40,7 +40,7 @@ int main(int argc, char const* argv[]) {
             }
         }
         else server.sockSend("ok");
-        clearBuffer(buffer, bufferSize);
+        //clearBuffer(buffer, bufferSize);
         server.sockClose();
     }
     return 0;
