@@ -6,13 +6,14 @@ bed::bed(int given_id, string given_name, const string& given_path):  meubel(giv
 
 }
 
-void bed::input(int id, string message){
+bool bed::input(int id, string message){
    if (id == this->id){
        if (message == "switch"){
-           toggleState();
+           return toggleState();
        }
        else if (message == "opgestaan") {
            zetState(true);
+           return true;
        }
-   }
+   } else return false;
 }
