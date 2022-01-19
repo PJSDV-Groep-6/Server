@@ -1,6 +1,7 @@
 // Server side C/C++ program to demonstrate Socket programming
 #include <string>
 #include <cstring>
+#include <vector>
 #include "headers/socketService.h"
 #include "headers/bed.h"
 #include "headers/schemerlamp.h"
@@ -11,9 +12,10 @@ void endBuffer(char* buffer, size_t length);
 void clearBuffer(char* buffer, const size_t length);
 
 int main(int argc, char const* argv[]) {
-    bed bed1(3, "bedLamp", "../states.cpp");
-    schemerlamp lamp1(1, "schemerLamp", "../states.cpp");
-    deur deur1(2, "deur", "../states.cpp");
+    std::vector<meubel*> meubels;
+    meubels.push_back(new schemerlamp(1, "schemerLamp", "../states.cpp"));
+    meubels.push_back(new deur(2, "deur", "../states.cpp"));
+    meubels.push_back(new bed(3, "bedLamp", "../states.cpp"));
     const size_t bufferSize = 1024;
     char buffer[1024] = {0};
     int valread;
@@ -26,24 +28,20 @@ int main(int argc, char const* argv[]) {
         endBuffer(buffer, valread);
         std::istringstream receive(buffer);
         receive >> id >> message;
-        lamp1.input(id, message);
-        if (bed1.input(id, message)){
-            lamp1.zetState(true);
+        for(meubel* Meubel : meubels){
+            Meubel->input(id, message);
+            Meubel->check();
         }
-        deur1.input(id, message);
-        lamp1.check();
-        bed1.check();
-        deur1.check();
         if (message == "check") {
             switch (id) {
                 case 1:
-                    server.sockSend(lamp1.state);
+                    server.sockSend(meubels[0]->state);
                     break;
                 case 2:
-                    server.sockSend(deur1.state);
+                    server.sockSend(meubels[1]->state);
                     break;
                 case 3:
-                    server.sockSend(bed1.state);
+                    server.sockSend(meubels[2]->state);
                     break;
                 default:
                     server.sockSend("Unkown ID");
@@ -51,11 +49,10 @@ int main(int argc, char const* argv[]) {
             }
         }
         else server.sockSend("ok");
-            //printf("%s\n", buffer);
-            clearBuffer(buffer, bufferSize);
-            server.sockClose();
+        //clearBuffer(buffer, bufferSize);
+        server.sockClose();
     }
-        return 0;
+    return 0;
 }
 
 void endBuffer(char* buffer, size_t length) {

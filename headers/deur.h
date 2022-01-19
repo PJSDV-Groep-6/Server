@@ -10,7 +10,7 @@ using namespace std;
 class deur : public meubel{
 public:
     deur(int, string, const string&);
-    void input(int,string);
+    bool input(int,string) override;
 private:
     FileHandle statefile;
     FileHandle log;
