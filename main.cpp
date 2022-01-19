@@ -33,19 +33,10 @@ int main(int argc, char const* argv[]) {
             Meubel->check();
         }
         if (message == "check") {
-            switch (id) {
-                case 1:
-                    server.sockSend(meubels[0]->state);
-                    break;
-                case 2:
-                    server.sockSend(meubels[1]->state);
-                    break;
-                case 3:
-                    server.sockSend(meubels[2]->state);
-                    break;
-                default:
-                    server.sockSend("Unkown ID");
-                    break;
+            for (int i = 0; i < meubels.size(); i++) {
+                if (id == meubels[i]->geefID()) {
+                    server.sockSend(meubels[i]->state);
+                }
             }
         }
         else server.sockSend("ok");

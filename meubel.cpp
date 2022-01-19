@@ -92,3 +92,7 @@ bool meubel::checkBrand() {
         return false;
     }
 }
+
+int meubel::geefID() {
+    return id;
+}
