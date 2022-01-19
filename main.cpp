@@ -32,10 +32,6 @@ int main(int argc, char const* argv[]) {
             Meubel->input(id, message);
             Meubel->check();
         }
-        deur1.input(id, message);
-        lamp1.check();
-        bed1.check();
-        deur1.check();
         if (message == "check") {
             switch (id) {
                 case 1:
