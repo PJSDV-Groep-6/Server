@@ -14,6 +14,7 @@ public:
     const char *state;
     string check();
     bool checkBrand();
+    virtual bool input(int, string) = 0;
 private:
     FileHandle statefile;
     FileHandle log;
