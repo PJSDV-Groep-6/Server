@@ -31,12 +31,12 @@ bool meubel::toggleState(){
     if (mem){
         zetState(false);
         mem = false;
-        return true;
+        return false;
     }
     else{
         zetState(true);
         mem = true;
-        return false;
+        return true;
     }
 }
 string meubel::check() {

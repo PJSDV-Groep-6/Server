@@ -27,7 +27,9 @@ int main(int argc, char const* argv[]) {
         std::istringstream receive(buffer);
         receive >> id >> message;
         lamp1.input(id, message);
-        bed1.input(id, message);
+        if (bed1.input(id, message)){
+            lamp1.zetState(true);
+        }
         deur1.input(id, message);
         lamp1.check();
         bed1.check();

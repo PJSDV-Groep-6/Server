@@ -9,7 +9,7 @@ using namespace std;
 class bed : public meubel{
 public:
     bed(int, string, const string&);
-    void input(int, string);
+    bool input(int, string);
 private:
     FileHandle statefile;
     FileHandle log;
