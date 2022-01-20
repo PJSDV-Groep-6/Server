@@ -11,6 +11,8 @@ bool STOP(char* buffer);
 
 int main(int argc, char const* argv[]) {
     std::vector<meubel*> meubels;
+    FileHandle istates("../istates.cpp");
+    istates.clear();
     meubels.push_back(new schemerlamp(1, "schemerLamp", "../states.cpp", "../istates.cpp"));
     meubels.push_back(new deur(2, "deur", "../states.cpp", "../istates.cpp"));
     meubels.push_back(new bed(3, "bedLamp", "../states.cpp", "../istates.cpp"));
