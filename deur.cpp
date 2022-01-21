@@ -13,5 +13,4 @@ void deur::input(int id, string message){
             zetState(false);
         }
     }
-    return false;
 }
