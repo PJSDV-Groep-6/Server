@@ -6,23 +6,17 @@
 #include <netinet/in.h>
 #include <stdexcept>
 #include <unistd.h>
-#include <sstream>
 
 using namespace std;
 
 class socketService {
 public:
     socketService(int);
+    void sockAccept();
+    int sockRead(char[]);
     void sockSend(const char*);
     void sockClose();
-    void parseInput(char[]);
-    void sockAccept();
-    int id;
-    string message;
 private:
-    void endBuffer(char* buffer, size_t length);
-    int sockRead(char[]);
-    int valread;
     int server_fd, new_socket;
     struct sockaddr_in address;
     int opt = 1;
