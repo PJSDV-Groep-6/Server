@@ -15,7 +15,6 @@ public:
     int modifyFileLine(string, string);
     int appendLine(string);
     int gotoLine(string);
-    void clear();
 private:
     string path;
 };

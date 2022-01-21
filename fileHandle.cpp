@@ -63,9 +63,3 @@ int FileHandle::appendLine(string line) {
     file.close();
     return 0;
 }
-
-void FileHandle::clear() {
-    ofstream file(this->path);
-    file<<"";
-    file.close();
-}
