@@ -6,6 +6,7 @@ schemerlamp::schemerlamp(int id, string name, const string& path): meubel(id, na
     
 }
 
+//custom processing van message voor schemerlamp
 void schemerlamp::input(int id, string message){
     if (id == this->id){
         if (message == "Beweging" && !mem){

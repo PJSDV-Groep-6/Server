@@ -2,14 +2,17 @@
 #include <iostream>
 
 meubel::meubel(int gegeven_id, string gegeven_name, string gegeven_path): name(gegeven_name), path(gegeven_path), id(gegeven_id), statefile(gegeven_path), log("log.txt") {
+    //zorg ervoor dat er altijd een brand state wordt aangemaakt in de statefile
     if(statefile.gotoLine("brand") == -1) {
         statefile.appendLine("brand 0 1");
     }
+    //zorge ervoor dat de object zijn eigen state aanmaakt in de statefile
     if(statefile.gotoLine(gegeven_name) == -1) {
         statefile.appendLine(gegeven_name + " 0 0");
     }
 }
 
+//zet de state op het meegegeven argument
 bool meubel::zetState(bool state){
     checkBrand();
     if (state || brand){
@@ -27,6 +30,7 @@ bool meubel::zetState(bool state){
     return mem;
 }
 
+//als de state true was zet het op false en omgekeerd
 bool meubel::toggleState(){
     if (mem){
         zetState(false);
@@ -39,6 +43,8 @@ bool meubel::toggleState(){
         return true;
     }
 }
+
+//check statefile en update eigen state naar statefile waarde
 string meubel::check() {
     std::fstream file(path, std::ios::in);
     if (file.is_open()) {
@@ -68,6 +74,7 @@ string meubel::check() {
     std::cout << this->name + " could not open " + this->path << std::endl;
 }
 
+// check als de brand state op 1 staat en zet eigen state en lock op 1
 bool meubel::checkBrand() {
     std::fstream file(path, std::ios::in);
     if (file.is_open()) {
