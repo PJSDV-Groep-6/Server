@@ -15,7 +15,6 @@ private:
     FileHandle log;
     FileHandle istates;
     bool bedSwitch;
-    string state;
 
 };
 #endif //SERVER_BED_H

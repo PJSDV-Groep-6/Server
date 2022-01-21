@@ -6,7 +6,6 @@ bed::bed(int given_id, string given_name, const string& given_path, string inter
                                                                                        istates(internal) {
     if(istates.gotoLine(name + "druksensor") == -1) {
         istates.appendLine(name + "druksensor 0");
-        state = name + "druksensor";
     }
 }
 
@@ -17,11 +16,7 @@ bool bed::input(int id, string message){
        }
        else if (message == "opgestaan") {
            zetState(true);
-           zetIState(state, false);
            return true;
-       }
-       else if (message == "iemand") {
-           zetIState(state, true);
        }
    } else return false;
 }
