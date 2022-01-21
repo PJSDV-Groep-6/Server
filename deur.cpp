@@ -4,6 +4,7 @@ deur::deur(int given_id, string given_name, const string& given_path):  meubel(g
 
 }
 
+//custom processing van message voor deur
 void deur::input(int id, string message){
     if (id == this->id){
         if ((message == "insideClosed" || message == "outsideClosed") && !mem){

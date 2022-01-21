@@ -6,6 +6,7 @@ bed::bed(int given_id, string given_name, const string& given_path):  meubel(giv
 
 }
 
+//custom processing van message voor bed
 bool bed::input(int id, string message){
    if (id == this->id){
        if (message == "switch"){
