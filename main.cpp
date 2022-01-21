@@ -27,7 +27,7 @@ int main(int argc, char const* argv[]) {
         for(meubel* Meubel : meubels){
             Meubel->input(id, message);
             Meubel->check();
-            //Meubel->checkIState(Meubel->state);
+            Meubel->checkIState(Meubel->state);
         }
         if (message == "check") {
             for (int i = 0; i < meubels.size(); i++) {

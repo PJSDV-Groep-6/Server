@@ -28,19 +28,20 @@ bool meubel::zetState(bool state){
 }
 
 bool meubel::zetIState(string state,bool value){
+    checkBrand();
     if (value){
         istatefile.modifyFileLine(state, state + " 1");
         //log.appendLine(name + " is aan");
-        //this->mem = true;
+        this->mem = true;
         return true;
     }
-    else if (!value){
+    else if (!brand && !value){
         istatefile.modifyFileLine(state, state + " 0");
         //log.appendLine(name + " is uit");
-        //this->mem = false;
+        this->mem = false;
         return false;
     }
-    //return mem;
+    return mem;
 }
 
 bool meubel::toggleState(){
@@ -109,11 +110,10 @@ string meubel::checkIState(string naam) {
                 this->state = "3";
                 file.close();
                 return "3";
-            }
         }
-        file.close();
-        std::cout << this->name + " could not open " + this->path << std::endl;
     }
+    file.close();
+    std::cout << this->name + " could not open " + this->path << std::endl;
 }
 
 bool meubel::checkBrand() {
