@@ -15,7 +15,6 @@ public:
     string check();
     bool checkBrand();
     virtual bool input(int, string) = 0;
-    int geefID();
 private:
     FileHandle statefile;
     FileHandle log;
