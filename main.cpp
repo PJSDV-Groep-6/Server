@@ -11,9 +11,9 @@ void endBuffer(char* buffer, size_t length);
 void clearBuffer(char* buffer, const size_t length);
 
 int main(int argc, char const* argv[]) {
-    bed bed1(3, "bedLamp", "../states.cpp");
-    schemerlamp lamp1(1, "schemerLamp", "../states.cpp");
-    deur deur1(2, "deur", "../states.cpp");
+    bed bed1(3, "bedLamp", "../states.txt");
+    schemerlamp lamp1(1, "schemerLamp", "../states.txt");
+    deur deur1(2, "deur", "../states.txt");
     const size_t bufferSize = 1024;
     char buffer[1024] = {0};
     int valread;
