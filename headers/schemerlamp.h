@@ -8,14 +8,12 @@ using namespace std;
 
 class schemerlamp : public meubel{
 public:
-    schemerlamp(int, string, const string&, string);
-    bool input(int, string) override;
+    schemerlamp(int, string, const string&);
+    void input(int, string);
 private:
     bool lamp;
     FileHandle statefile;
     FileHandle log;
-    FileHandle istates;
-    string state;
 };
 
 

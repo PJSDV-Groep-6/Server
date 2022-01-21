@@ -1,6 +1,6 @@
 #include "headers/socketService.h"
 
-socketService::socketService(int port): PORT(port), valread(0) {
+socketService::socketService(int port): PORT(port) {
     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0)
     {
         perror("socket failed");
@@ -49,20 +49,4 @@ void socketService::sockSend(const char* message) {
 void socketService::sockClose() {
     shutdown(new_socket, SHUT_RDWR);
     close(new_socket);
-}
-
-void socketService::parseInput(char buffer[]) {
-    valread = sockRead(buffer);
-    endBuffer(buffer, valread);
-    std::istringstream receive(buffer);
-    receive >> id >> message;
-}
-
-void socketService::endBuffer(char* buffer, size_t length) {
-    if (length >= 0) {
-        buffer[length] = '\r';
-    }
-    else {
-        buffer[0] = '\r';
-    }
 }

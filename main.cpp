@@ -1,48 +1,61 @@
 // Server side C/C++ program to demonstrate Socket programming
 #include <string>
 #include <cstring>
-#include <vector>
 #include "headers/socketService.h"
 #include "headers/bed.h"
 #include "headers/schemerlamp.h"
 #include "headers/deur.h"
-#include "headers/muur.h"
+
 bool STOP(char* buffer);
+void endBuffer(char* buffer, size_t length);
+void clearBuffer(char* buffer, const size_t length);
 
 int main(int argc, char const* argv[]) {
-    std::vector<meubel*> meubels;
-    FileHandle istates("../istates.cpp");
-    istates.clear();
-    meubels.push_back(new schemerlamp(1, "schemerLamp", "../states.cpp", "../istates.cpp"));
-    meubels.push_back(new deur(2, "deur", "../states.cpp", "../istates.cpp"));
-    meubels.push_back(new bed(3, "bedLamp", "../states.cpp", "../istates.cpp"));
-    meubels.push_back(new muur(4, "muur", "../states.cpp", "../istates.cpp"));
-    int id = 0;
+    bed bed1(3, "bedLamp", "states.txt");
+    schemerlamp lamp1(1, "schemerLamp", "states.txt");
+    deur deur1(2, "deur", "states.txt");
+    const size_t bufferSize = 1024;
     char buffer[1024] = {0};
+    int valread;
+    int id = 0;
     std::string message;
     socketService server(8080);
     while (!STOP(buffer)) {
         server.sockAccept();
-        server.parseInput(buffer);
-        id = server.id;
-        message = server.message;
-        for(meubel* Meubel : meubels){
-            Meubel->input(id, message);
-            Meubel->check();
-            //Meubel->checkIState(Meubel->state);
+        valread = server.sockRead(buffer);
+        endBuffer(buffer, valread);
+        std::istringstream receive(buffer);
+        receive >> id >> message;
+        lamp1.input(id, message);
+        if (bed1.input(id, message)){
+            lamp1.zetState(true);
         }
+        deur1.input(id, message);
+        lamp1.check();
+        bed1.check();
+        deur1.check();
         if (message == "check") {
-            for (int i = 0; i < meubels.size(); i++) {
-                if (id == meubels[i]->geefID()) {
-                    server.sockSend(meubels[i]->state);
-                }
+            switch (id) {
+                case 1:
+                    server.sockSend(lamp1.state);
+                    break;
+                case 2:
+                    server.sockSend(deur1.state);
+                    break;
+                case 3:
+                    server.sockSend(bed1.state);
+                    break;
+                default:
+                    server.sockSend("Unkown ID");
+                    break;
             }
         }
         else server.sockSend("ok");
-        //clearBuffer(buffer, bufferSize);
-        server.sockClose();
+            //printf("%s\n", buffer);
+            clearBuffer(buffer, bufferSize);
+            server.sockClose();
     }
-    return 0;
+        return 0;
 }
 
 void endBuffer(char* buffer, size_t length) {

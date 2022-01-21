@@ -8,14 +8,12 @@ using namespace std;
 
 class bed : public meubel{
 public:
-    bed(int, string, const string&, string);
-    bool input(int, string) override;
+    bed(int, string, const string&);
+    bool input(int, string);
 private:
     FileHandle statefile;
     FileHandle log;
-    FileHandle istates;
     bool bedSwitch;
-    string state;
 
 };
 #endif //SERVER_BED_H

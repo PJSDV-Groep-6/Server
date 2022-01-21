@@ -1,7 +1,7 @@
 #include "headers/meubel.h"
 #include <iostream>
 
-meubel::meubel(int gegeven_id, string gegeven_name, string gegeven_path, string internal): name(gegeven_name), path(gegeven_path), id(gegeven_id), statefile(gegeven_path), log("log.txt"), istatefile(internal), internal(internal) {
+meubel::meubel(int gegeven_id, string gegeven_name, string gegeven_path): name(gegeven_name), path(gegeven_path), id(gegeven_id), statefile(gegeven_path), log("log.txt") {
     if(statefile.gotoLine("brand") == -1) {
         statefile.appendLine("brand 0 1");
     }
@@ -25,22 +25,6 @@ bool meubel::zetState(bool state){
         return false;
     }
     return mem;
-}
-
-bool meubel::zetIState(string state,bool value){
-    if (value){
-        istatefile.modifyFileLine(state, state + " 1");
-        //log.appendLine(name + " is aan");
-        //this->mem = true;
-        return true;
-    }
-    else if (!value){
-        istatefile.modifyFileLine(state, state + " 0");
-        //log.appendLine(name + " is uit");
-        //this->mem = false;
-        return false;
-    }
-    //return mem;
 }
 
 bool meubel::toggleState(){
@@ -84,38 +68,6 @@ string meubel::check() {
     std::cout << this->name + " could not open " + this->path << std::endl;
 }
 
-string meubel::checkIState(string naam) {
-    std::fstream file(internal, std::ios::in);
-    if (file.is_open()) {
-        std::string line;
-        std::string state;
-        int value = 0;
-        while (getline(file, line)) {
-            std::istringstream stream(line);
-            stream >> state >> value;
-            if (state == naam && value == 1) {
-                this->state = "1";
-                file.close();
-                return "1";
-            } else if (state == naam && value == 0) {
-                this->state = "0";
-                file.close();
-                return "0";
-            } else if (state == naam && value == 2) {
-                this->state = "2";
-                file.close();
-                return "2";
-            } else if (state == naam && value == 3) {
-                this->state = "3";
-                file.close();
-                return "3";
-            }
-        }
-        file.close();
-        std::cout << this->name + " could not open " + this->path << std::endl;
-    }
-}
-
 bool meubel::checkBrand() {
     std::fstream file(path, std::ios::in);
     if (file.is_open()) {
@@ -139,8 +91,4 @@ bool meubel::checkBrand() {
         }
         return false;
     }
-}
-
-int meubel::geefID() {
-    return id;
 }
