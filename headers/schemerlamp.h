@@ -9,7 +9,7 @@ using namespace std;
 class schemerlamp : public meubel{
 public:
     schemerlamp(int, string, const string&);
-    bool input(int, string) override;
+    void input(int, string);
 private:
     bool lamp;
     FileHandle statefile;
